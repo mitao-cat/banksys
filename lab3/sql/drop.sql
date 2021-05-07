@@ -1,92 +1,68 @@
-alter table ´¢Ðî¿ª»§
-   drop constraint FK_´¢Ðî¿ª»§_´¢Ðî¿ª»§_¿Í»§;
+use bank;
 
-alter table ´¢Ðî¿ª»§
-   drop constraint FK_´¢Ðî¿ª»§_´¢Ðî¿ª»§2_Ö§ÐÐ;
+alter table å‚¨è“„å¼€æˆ· 
+	drop constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·_å®¢æˆ·;
 
-alter table ´¢Ðî¿ª»§
-   drop constraint FK_´¢Ðî¿ª»§_´¢Ðî¿ª»§3_´¢ÐîÕË»§;
+alter table å‚¨è“„å¼€æˆ·
+   drop constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·2_æ”¯è¡Œ;
 
-alter table ´¢ÐîÕË»§
-   drop constraint FK_´¢ÐîÕË»§_INHERITAN_ÕË»§;
+alter table å‚¨è“„å¼€æˆ·
+   drop constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·3_å‚¨è“„è´¦æˆ·;
 
-alter table Ô±¹¤
-   drop constraint FK_Ô±¹¤_Áìµ¼_Ô±¹¤;
+alter table å‚¨è“„è´¦æˆ·
+   drop constraint FK_å‚¨è“„è´¦æˆ·_INHERITAN_è´¦æˆ·;
 
-alter table ¿Í»§
-   drop constraint FK_¿Í»§_¸ºÔð_Ô±¹¤;
+alter table å‘˜å·¥
+   drop constraint FK_å‘˜å·¥_é¢†å¯¼_å‘˜å·¥;
 
-alter table ÓµÓÐ5
-   drop constraint FK_ÓµÓÐ5_ÓµÓÐ5_´û¿î;
+alter table å®¢æˆ·
+   drop constraint FK_å®¢æˆ·_è´Ÿè´£_å‘˜å·¥;
 
-alter table ÓµÓÐ5
-   drop constraint FK_ÓµÓÐ5_ÓµÓÐ6_¿Í»§;
+alter table æ‹¥æœ‰5
+   drop constraint FK_æ‹¥æœ‰5_æ‹¥æœ‰5_è´·æ¬¾;
 
-alter table Ö§¸¶Çé¿ö
-   drop constraint FK_Ö§¸¶Çé¿ö_Ö§¸¶Çé¿ö_´û¿î;
+alter table æ‹¥æœ‰5
+   drop constraint FK_æ‹¥æœ‰5_æ‹¥æœ‰6_å®¢æˆ·;
 
-alter table Ö§¸¶Çé¿ö
-   drop constraint FK_Ö§¸¶Çé¿ö_Ö§¸¶Çé¿ö2_¿Í»§;
+alter table æ”¯ä»˜æƒ…å†µ
+   drop constraint FK_æ”¯ä»˜æƒ…å†µ_æ”¯ä»˜æƒ…å†µ_è´·æ¬¾;
 
-alter table ´û¿î
-   drop constraint FK_´û¿î_ÓµÓÐ´û¿î_Ö§ÐÐ;
+alter table æ”¯ä»˜æƒ…å†µ
+   drop constraint FK_æ”¯ä»˜æƒ…å†µ_æ”¯ä»˜æƒ…å†µ2_å®¢æˆ·;
 
-alter table ´û¿î¿ª»§
-   drop constraint FK_´û¿î¿ª»§_´û¿î¿ª»§_¿Í»§;
+alter table è´·æ¬¾
+   drop constraint FK_è´·æ¬¾_æ‹¥æœ‰è´·æ¬¾_æ”¯è¡Œ;
 
-alter table ´û¿î¿ª»§
-   drop constraint FK_´û¿î¿ª»§_´û¿î¿ª»§2_Ö§ÐÐ;
+alter table è´·æ¬¾å¼€æˆ·
+   drop constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·_å®¢æˆ·;
 
-alter table ´û¿î¿ª»§
-   drop constraint FK_´û¿î¿ª»§_´û¿î¿ª»§3_´û¿îÕË»§;
+alter table è´·æ¬¾å¼€æˆ·
+   drop constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·2_æ”¯è¡Œ;
 
-alter table ´û¿îÕË»§
-   drop constraint FK_´û¿îÕË»§_INHERITAN_ÕË»§;
+alter table è´·æ¬¾å¼€æˆ·
+   drop constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·3_è´·æ¬¾è´¦æˆ·;
 
-drop index ´¢Ðî¿ª»§3_FK;
+alter table è´·æ¬¾è´¦æˆ·
+   drop constraint FK_è´·æ¬¾è´¦æˆ·_INHERITAN_è´¦æˆ·;
 
-drop index ´¢Ðî¿ª»§2_FK;
+drop table å‚¨è“„å¼€æˆ·;
 
-drop index ´¢Ðî¿ª»§_FK;
+drop table å‚¨è“„è´¦æˆ·;
 
-drop table ´¢Ðî¿ª»§ cascade constraints;
+drop table å‘˜å·¥;
 
-drop table ´¢ÐîÕË»§ cascade constraints;
+drop table å®¢æˆ·;
 
-drop index Áìµ¼_FK;
+drop table æ‹¥æœ‰5;
 
-drop table Ô±¹¤ cascade constraints;
+drop table æ”¯ä»˜æƒ…å†µ;
 
-drop index ¸ºÔð_FK;
+drop table æ”¯è¡Œ;
 
-drop table ¿Í»§ cascade constraints;
+drop table è´¦æˆ·;
 
-drop index ÓµÓÐ6_FK;
+drop table è´·æ¬¾;
 
-drop index ÓµÓÐ5_FK;
+drop table è´·æ¬¾å¼€æˆ·;
 
-drop table ÓµÓÐ5 cascade constraints;
-
-drop index Ö§¸¶Çé¿ö2_FK;
-
-drop index Ö§¸¶Çé¿ö_FK;
-
-drop table Ö§¸¶Çé¿ö cascade constraints;
-
-drop table Ö§ÐÐ cascade constraints;
-
-drop table ÕË»§ cascade constraints;
-
-drop index ÓµÓÐ´û¿î_FK;
-
-drop table ´û¿î cascade constraints;
-
-drop index ´û¿î¿ª»§3_FK;
-
-drop index ´û¿î¿ª»§2_FK;
-
-drop index ´û¿î¿ª»§_FK;
-
-drop table ´û¿î¿ª»§ cascade constraints;
-
-drop table ´û¿îÕË»§ cascade constraints;
+drop table è´·æ¬¾è´¦æˆ·;

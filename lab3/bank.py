@@ -1,3 +1,4 @@
+#-*-coding:utf-8 -*- 
 from ui_bank import *
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTreeWidgetItem
 from PyQt5.QtCore import QDate
@@ -25,6 +26,7 @@ def get_date(string):
 	m=date[1]
 	d=date[2][0:2]
 	return y + '/' + m + '/' + d
+
 #----------------------------------------------#
 #              界面逻辑部分                     #
 #----------------------------------------------#
@@ -87,12 +89,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.pushButton_35.clicked.connect(self.clear_store_statistic)
 		self.pushButton_34.clicked.connect(self.loan_statistic)
 		self.pushButton_36.clicked.connect(self.clear_loan_statistic)
+	
 	def get_query(self, need_fetch):
-		global conn
+		global db
 		#print(self.query)
 		result = []
 		if host == 0:
-			cursor = conn.cursor()
+			cursor = db.cursor()
 			try:
 				cursor.execute(self.query)
 			except:
@@ -100,13 +103,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				return
 			if need_fetch:
 				result = cursor.fetchall()
-			conn.commit()
+			
+			db.commit()
 			cursor.close()
+		
 		self.before = '' #每进行一次操作需要刷新 doubleclicked item时记录的待更改值
 		return result
 
 	def error_input(self, err_msg):
-		reply = QMessageBox.information(self, "消息", err_msg, QMessageBox.Yes | QMessageBox.No) 
+		QMessageBox.information(self, "消息", err_msg, QMessageBox.Yes | QMessageBox.No) 
 
 	# ---------------------------------------------------#
 	#                Main Part code                      #
@@ -124,7 +129,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 			return
 
 		self.query = 'insert into 支行(城市, 名字, 资产) Values(' + wrap_value(self.lineEdit_1.text()) + ', '+ wrap_value(self.lineEdit_2.text()) + ', '+ wrap_value(self.lineEdit_3.text(), False) + ')'
-		query_result = self.get_query(False)
+		#query_result = self.get_query(False)
 	
 	def delete_bank(self):
 		self.select_bank()
@@ -198,7 +203,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		reply = QMessageBox.question(self, '确认', "确定执行操作?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 		if reply == QMessageBox.No: 
 			return
-		self.query = 'insert into 员工(身份证号Y, 员工_身份证号Y, 姓名Y, 电话号码Y, 家庭住址Y, 开始工作日期) Values(' + wrap_value(self.lineEdit_4.text()) + ', '+ wrap_value(self.lineEdit_22.text()) + ', ' +  wrap_value(self.lineEdit_5.text()) + ', '+ wrap_value(self.lineEdit_6.text()) +', ' + wrap_value(self.lineEdit_7.text()) + ', ' 'to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd')  + ')' +')'
+		self.query = 'insert into 员工(身份证号Y, 员工_身份证号Y, 姓名Y, 电话号码Y, 家庭住址Y, 开始工作日期) Values(' + wrap_value(self.lineEdit_4.text()) + ', '+ wrap_value(self.lineEdit_22.text()) + ', ' +  wrap_value(self.lineEdit_5.text()) + ', '+ wrap_value(self.lineEdit_6.text()) +', ' + wrap_value(self.lineEdit_7.text()) + ', ' 'str_to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d')  + ')' +')'
 		self.get_query(False)
 		
 	def delete_staff(self):
@@ -207,7 +212,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		reply = QMessageBox.question(self, '确认', "确定执行操作?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 		if reply == QMessageBox.No: 
 			return
-		self.query = 'delete from 员工 where ' + wrap_condition('身份证号Y', self.lineEdit_4.text()) + ' and ' + wrap_condition('员工_身份证号Y', self.lineEdit_22.text()) + ' and ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ' and ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ' and ' + wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ' and ' + '开始工作日期' + self.op[self.comboBox_3.currentIndex()] + 'to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd')  + ')'
+		self.query = 'delete from 员工 where ' + wrap_condition('身份证号Y', self.lineEdit_4.text()) + ' and ' + wrap_condition('员工_身份证号Y', self.lineEdit_22.text()) + ' and ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ' and ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ' and ' + wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ' and ' + '开始工作日期' + self.op[self.comboBox_3.currentIndex()] + 'str_to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d')  + ')'
 		self.get_query(False)
 		self.treeWidget_2.clear()
 	
@@ -219,7 +224,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 			self.error_input('注意修改之前需要双击待修改项目哦！')
 			return
 		self.comboBox_3.setCurrentIndex(0)  #更新时只能使用日期 = 操作符
-		setting = wrap_condition('身份证号Y', self.lineEdit_4.text()) + ', ' + wrap_condition('员工_身份证号Y', self.lineEdit_22.text()) + ', ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ', ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ', '+ wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ', ' + '开始工作日期 = to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')'
+		setting = wrap_condition('身份证号Y', self.lineEdit_4.text()) + ', ' + wrap_condition('员工_身份证号Y', self.lineEdit_22.text()) + ', ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ', ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ', '+ wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ', ' + '开始工作日期 = str_to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')'
 		
 		self.query = 'update 员工 set ' + setting + ' where ' + self.before
 		#确认更新
@@ -229,7 +234,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.get_query(False)
 
 	def select_staff(self):
-		self.query = 'select * from 员工 where ' + wrap_condition('身份证号Y', self.lineEdit_4.text()) + ' and ' + wrap_condition('身份证号Y', self.lineEdit_22.text()) + ' and ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ' and ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ' and ' + wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ' and ' + '开始工作日期' + self.op[self.comboBox_3.currentIndex()] +'to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')'
+		self.query = 'select * from 员工 where ' + wrap_condition('身份证号Y', self.lineEdit_4.text()) + ' and ' + wrap_condition('身份证号Y', self.lineEdit_22.text()) + ' and ' + wrap_condition('姓名Y', self.lineEdit_5.text()) + ' and ' + wrap_condition('电话号码Y', self.lineEdit_6.text()) + ' and ' + wrap_condition('家庭住址Y', self.lineEdit_7.text()) + ' and ' + '开始工作日期' + self.op[self.comboBox_3.currentIndex()] +'str_to_date('+ wrap_value(self.dateEdit.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')'
 		query_result = self.get_query(True)
 		if host == 0 and query_result is not None:
 			self.feed_table_staff(query_result)
@@ -244,7 +249,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.comboBox_3.setCurrentIndex(0)  #更新时只能使用日期 = 操作符
 		
 		self.dateEdit.setDate(QDate.fromString(item.text(5), 'yyyy/MM/dd'))
-		self.before =  wrap_condition('身份证号Y', item.text(0)) + ' and ' + wrap_condition('员工_身份证号Y', item.text(2)) + ' and ' + wrap_condition('姓名Y', item.text(3)) + ' and ' + wrap_condition('电话号码Y', item.text(4)) + ' and ' + wrap_condition('家庭住址Y', item.text(5)) + ' and ' + '开始工作日期 = to_date('+ wrap_value(item.text(6)) + ', ' + wrap_value('yyyy/MM/dd') + ')'
+		self.before =  wrap_condition('身份证号Y', item.text(0)) + ' and ' + wrap_condition('员工_身份证号Y', item.text(2)) + ' and ' + wrap_condition('姓名Y', item.text(3)) + ' and ' + wrap_condition('电话号码Y', item.text(4)) + ' and ' + wrap_condition('家庭住址Y', item.text(5)) + ' and ' + '开始工作日期 = str_to_date('+ wrap_value(item.text(6)) + ', ' + wrap_value('%Y/%m/%d') + ')'
 	
 	def clear_staff(self):
 		self.lineEdit_4.setText('')
@@ -304,7 +309,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.query = 'update 客户 set ' + setting + ' where ' + self.before
 		#确认更新
 		reply = QMessageBox.question(self, '确认', "确定执行操作?", QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-		if reply == QMessageBox.No and query_result is not None: 
+		if reply == QMessageBox.No : 
 			return
 		self.get_query(False)
 
@@ -360,12 +365,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		if reply == QMessageBox.No: 
 			return
 		
-		self.query = 'insert into 账户(账户号, 开户日期, 余额) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) + ')'
+		self.query = 'insert into 账户(账户号, 开户日期, 余额) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) + ')'
 		self.get_query(False)
 		if self.comboBox_7.currentIndex() == 0 :
-			self.query = 'insert into 储蓄账户(账户号, 开户日期, 余额, 利率, 货币类型) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) + ', ' + wrap_value(self.lineEdit_25.text(), False) + ', ' + wrap_value(self.lineEdit_26.text()) + ')'
+			self.query = 'insert into 储蓄账户(账户号, 开户日期, 余额, 利率, 货币类型) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) + ', ' + wrap_value(self.lineEdit_25.text(), False) + ', ' + wrap_value(self.lineEdit_26.text()) + ')'
 		else:
-			self.query = 'insert into 贷款账户(账户号, 开户日期, 余额, 透支额) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) +  ', ' + wrap_value(self.lineEdit_27.text(), False) + ')'
+			self.query = 'insert into 贷款账户(账户号, 开户日期, 余额, 透支额) Values(' + wrap_value(self.lineEdit_17.text(), False) + ', '+ 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', '+ wrap_value(self.lineEdit_19.text(), False) +  ', ' + wrap_value(self.lineEdit_27.text(), False) + ')'
 		self.get_query(False)
 		
 	def delete_account(self):
@@ -385,11 +390,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		if self.comboBox_7.currentIndex() == 0 :
 			self.query = 'delete from 储蓄开户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) 
 			self.get_query(False)
-			self.query = 'delete from 储蓄账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + money + ' and ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ' and ' + wrap_condition('货币类型', self.lineEdit_26.text())
+			self.query = 'delete from 储蓄账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + money + ' and ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ' and ' + wrap_condition('货币类型', self.lineEdit_26.text())
 		else :
 			self.query = 'delete from 贷款开户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False)
 			self.get_query(False)
-			self.query = 'delete from 贷款账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + money + ' and ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
+			self.query = 'delete from 贷款账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + money + ' and ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
 		self.get_query(False)
 		self.query = 'delete from 账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False)
 		
@@ -407,17 +412,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.comboBox_2.setCurrentIndex(0) #更新操作强制设置日期 = op
 		self.comboBox_4.setCurrentIndex(0)
 		if self.comboBox_7.currentIndex() == 0 :
-			setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False) +  ', ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ', ' + wrap_condition('货币类型', self.lineEdit_26.text())
+			setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False) +  ', ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ', ' + wrap_condition('货币类型', self.lineEdit_26.text())
 			self.query = 'update 储蓄账户 set ' + setting + ' where ' + self.before
 		else:
-			setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False) +  ', ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
+			setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False) +  ', ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
 			self.query = 'update 贷款账户 set ' + setting + ' where ' + self.before
 		#确认更新
 		reply = QMessageBox.question(self, '确认', "确定执行操作?", QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
 		if reply == QMessageBox.No: 
 			return
 		self.get_query(False)
-		setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False)
+		setting = wrap_condition('账户号', self.lineEdit_17.text(), False) + ', ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ', ' + wrap_condition('余额', self.lineEdit_19.text(), False)
 		self.query = 'update 账户 set ' + setting + ' where ' + self.before2
 		self.get_query(False)
 		self.before2 = ""
@@ -428,9 +433,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		else:
 			money = '余额' + self.op[self.comboBox_4.currentIndex()] + self.lineEdit_19.text()
 		if self.comboBox_7.currentIndex() == 0 :
-			self.query = 'select * from 储蓄账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + money + ' and ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ' and ' + wrap_condition('货币类型', self.lineEdit_26.text())
+			self.query = 'select * from 储蓄账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + money + ' and ' + wrap_condition('利率', self.lineEdit_25.text(), False) + ' and ' + wrap_condition('货币类型', self.lineEdit_26.text())
 		else:
-			self.query = 'select * from 贷款账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + money + ' and ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
+			self.query = 'select * from 贷款账户 where ' + wrap_condition('账户号', self.lineEdit_17.text(), False) + ' and ' + '开户日期' + self.op[self.comboBox_2.currentIndex()] + 'str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + money + ' and ' + wrap_condition('透支额', self.lineEdit_27.text(), False)
 		query_result = self.get_query(True) 
 		if host == 0 and query_result is not None:
 			self.feed_table_account(query_result)
@@ -441,14 +446,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.comboBox_4.setCurrentIndex(0)
 		self.dateEdit_2.setDate(QDate.fromString(item.text(1), 'yyyy/MM/dd'))
 		self.lineEdit_19.setText(item.text(2))
-		self.before2 = wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + wrap_condition('余额', item.text(2), False)
+		self.before2 = wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + wrap_condition('余额', item.text(2), False)
 		if self.comboBox_7.currentIndex() == 0 :
 			self.lineEdit_25.setText(item.text(3))
 			self.lineEdit_26.setText(item.text(4))
-			self.before =  wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + wrap_condition('余额', item.text(2), False) + ' and ' + wrap_condition('利率', item.text(3), False) +  ' and ' + wrap_condition('货币类型', item.text(4))
+			self.before =  wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + wrap_condition('余额', item.text(2), False) + ' and ' + wrap_condition('利率', item.text(3), False) +  ' and ' + wrap_condition('货币类型', item.text(4))
 		else:
 			self.lineEdit_27.setText(item.text(3))
-			self.before =  wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and ' + wrap_condition('余额', item.text(2), False) +' and ' + wrap_condition('透支额', item.text(3), False)
+			self.before =  wrap_condition('账户号', item.text(0), False) + ' and ' + '开户日期 = str_to_date('+ wrap_value(self.dateEdit_2.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and ' + wrap_condition('余额', item.text(2), False) +' and ' + wrap_condition('透支额', item.text(3), False)
 	
 	def clear_account(self):
 		self.lineEdit_17.setText('')
@@ -498,7 +503,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		if reply == QMessageBox.No: 
 			return
 		self.query = 'insert into 贷款(金额1, 贷款号, 名字) Values(' + wrap_value(self.lineEdit_18.text(), False) + ', '+ wrap_value(self.lineEdit_20.text(), False) + ', '+ wrap_value(self.lineEdit_21.text()) + ')'
-		query_result = self.get_query(False)
+		#query_result = self.get_query(False)
 
 	def delete_loan(self):
 		self.select_loan()
@@ -572,9 +577,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.treeWidget_5.addTopLevelItems(L)
 	def pay_loan(self):
 		if self.lineEdit_24.text() == '' or self.lineEdit_23.text() == '':
-			error_input('输入发放贷款信息不足！')
+			self.error_input('输入发放贷款信息不足！')
 			return 
-		self.query = 'insert into 支付情况(贷款号, 身份证号, 金额1, 日期付款) values('+ wrap_value(self.lineEdit_20.text(), False) + ', ' + wrap_value(self.lineEdit_24.text()) + ', '  + wrap_value(self.lineEdit_23.text(), False) + ', to_date(' + wrap_value(QDate.currentDate().toString('yyyy/MM/dd')) + ', ' + wrap_value('yyyy/MM/dd') + '))'
+		self.query = 'insert into 支付情况(贷款号, 身份证号, 金额1, 日期付款) values('+ wrap_value(self.lineEdit_20.text(), False) + ', ' + wrap_value(self.lineEdit_24.text()) + ', '  + wrap_value(self.lineEdit_23.text(), False) + ', str_to_date(' + wrap_value(QDate.currentDate().toString('yyyy/MM/dd')) + ', ' + wrap_value('%Y/%m/%d') + '))'
 		#确认发放
 		reply = QMessageBox.question(self, '确认', "确定执行操作?", QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
 		if reply == QMessageBox.No: 
@@ -583,7 +588,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	
 	#------------------------statistic ----------------------------#
 	def store_statistic(self):
-		time_interval = '储蓄账户.开户日期 > to_date('+ wrap_value(self.dateEdit_3.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and 储蓄账户.开户日期 < to_date('+ wrap_value(self.dateEdit_4.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')'
+		time_interval = '储蓄账户.开户日期 > str_to_date('+ wrap_value(self.dateEdit_3.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and 储蓄账户.开户日期 < str_to_date('+ wrap_value(self.dateEdit_4.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')'
 		self.query = 'select 支行.名字,  COUNT(*), SUM(余额) from 支行, 储蓄开户, 储蓄账户 where 支行.名字 = 储蓄开户.名字 and 储蓄开户.账户号 = 储蓄账户.账户号' + ' and ' + time_interval + ' group by 支行.名字'
 		query_result = self.get_query(True)
 		if query_result is not None:
@@ -597,7 +602,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.treeWidget_6.clear()
 		
 	def loan_statistic(self):
-		time_interval = '贷款账户.开户日期 > to_date('+ wrap_value(self.dateEdit_6.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')' + ' and 贷款账户.开户日期 < to_date('+ wrap_value(self.dateEdit_7.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('yyyy/MM/dd') + ')'
+		time_interval = '贷款账户.开户日期 > str_to_date('+ wrap_value(self.dateEdit_6.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')' + ' and 贷款账户.开户日期 < str_to_date('+ wrap_value(self.dateEdit_7.date().toString("yyyy/MM/dd")) + ', ' + wrap_value('%Y/%m/%d') + ')'
 		self.query = 'select 支行.名字,  COUNT(*), SUM(余额) from 支行, 贷款开户, 贷款账户 where 支行.名字 = 贷款开户.名字 and 贷款开户.账户号 = 贷款账户.账户号' + ' and ' + time_interval + ' group by 支行.名字'
 		query_result = self.get_query(True)
 		if query_result is not None:
@@ -613,17 +618,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	
 if __name__ == "__main__":
 	try:
-		import cx_Oracle
+		import MySQLdb
 	except:
-		print("cx_Oracle not installed!")
+		print("MySQLdb not installed!")
+	
 	try:
-		conn = cx_Oracle.connect('c##ypluo/lyp@orcl')
-		print("Connected successfunlly!")
+		db = MySQLdb.connect("localhost","lyp1234","1234","bank", charset = "utf8")
+		cursor = db.cursor()
+		print("Connected successfully!")
 		host = 0
 	except:
 		host = 1
 		print("Failed to connect the database!")
+	
 	app = QtWidgets.QApplication(sys.argv)
 	MainWindow = MainWindow()
 	MainWindow.show()
 	sys.exit(app.exec_())
+	
+	if host == 0:
+		db.close()

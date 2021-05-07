@@ -3,7 +3,7 @@ from MySQLdb._exceptions import OperationalError
 
 def db_login(user, passwd, server_addr, dbname):
     try:
-        db = MySQLdb.connect(server_addr, user, passwd, dbname)
+        db = MySQLdb.connect(server_addr, user, passwd, dbname, charset = "utf8")
     except OperationalError:
         db = None
 

@@ -1,292 +1,205 @@
-/*==============================================================*/
-/* DBMS name:      ORACLE Version 11g                           */
-/* Created on:     2018/6/7 17:33:40                            */
-/*==============================================================*/
+-- create database bank;
+use bank;
+-- show tables;
 
-/*==============================================================*/
-/* Table: ´¢Ğî¿ª»§                                                  */
-/*==============================================================*/
-create table ´¢Ğî¿ª»§ 
+create table å‚¨è“„å¼€æˆ· 
 (
-   Éí·İÖ¤ºÅ                 nvarchar2(20)             not null,
-   Ãû×Ö                   nvarchar2(20)             not null,
-   ÕË»§ºÅ                  INTEGER              not null,
-   ×î½ü·ÃÎÊÈÕÆÚ               DATE,
-   constraint PK_´¢Ğî¿ª»§ primary key (Éí·İÖ¤ºÅ, Ãû×Ö, ÕË»§ºÅ)
+   èº«ä»½è¯å·                 varchar(20)             not null,
+   åå­—                   varchar(20)             not null,
+   è´¦æˆ·å·                  INTEGER              not null,
+   æœ€è¿‘è®¿é—®æ—¥æœŸ               DATE,
+   constraint PK_å‚¨è“„å¼€æˆ· primary key (èº«ä»½è¯å·, åå­—, è´¦æˆ·å·)
 );
 
-/*==============================================================*/
-/* Index: ´¢Ğî¿ª»§_FK                                               */
-/*==============================================================*/
-create index ´¢Ğî¿ª»§_FK on ´¢Ğî¿ª»§ (
-   Éí·İÖ¤ºÅ ASC
-);
 
 /*==============================================================*/
-/* Index: ´¢Ğî¿ª»§2_FK                                              */
+/* Table: å‚¨è“„è´¦æˆ·                                                  */
 /*==============================================================*/
-create index ´¢Ğî¿ª»§2_FK on ´¢Ğî¿ª»§ (
-   Ãû×Ö ASC
-);
-
-/*==============================================================*/
-/* Index: ´¢Ğî¿ª»§3_FK                                              */
-/*==============================================================*/
-create index ´¢Ğî¿ª»§3_FK on ´¢Ğî¿ª»§ (
-   ÕË»§ºÅ ASC
-);
-
-/*==============================================================*/
-/* Table: ´¢ĞîÕË»§                                                  */
-/*==============================================================*/
-create table ´¢ĞîÕË»§ 
+create table å‚¨è“„è´¦æˆ· 
 (
-   ÕË»§ºÅ                  INTEGER              not null,
-   ¿ª»§ÈÕÆÚ                 DATE,
-   Óà¶î                   NUMBER(8,2),
-   »õ±ÒÀàĞÍ                 nvarchar2(50),
-   ÀûÂÊ                   FLOAT,
-   constraint PK_´¢ĞîÕË»§ primary key (ÕË»§ºÅ)
+   è´¦æˆ·å·                  INTEGER              not null,
+   å¼€æˆ·æ—¥æœŸ                 DATE,
+   ä½™é¢                   DECIMAL(8,2),
+   è´§å¸ç±»å‹                 varchar(50),
+   åˆ©ç‡                   FLOAT,
+   constraint PK_å‚¨è“„è´¦æˆ· primary key (è´¦æˆ·å·)
 );
 
+
 /*==============================================================*/
-/* Table: Ô±¹¤                                                    */
+/* Table: è´·æ¬¾å¼€æˆ·                                                  */
 /*==============================================================*/
-create table Ô±¹¤ 
+create table è´·æ¬¾å¼€æˆ· 
 (
-   Éí·İÖ¤ºÅY               nvarchar2(20)             not null,
-   Ô±¹¤_Éí·İÖ¤ºÅY            nvarchar2(20),
-   ĞÕÃûY                  nvarchar2(50),
-   µç»°ºÅÂëY                nvarchar2(50),
-   ¼ÒÍ¥×¡Ö·Y                nvarchar2(50),
-   ¿ªÊ¼¹¤×÷ÈÕÆÚ              DATE,
-   constraint PK_Ô±¹¤ primary key (Éí·İÖ¤ºÅY)
+   èº«ä»½è¯å·                 varchar(20)             not null,
+   åå­—                   varchar(20)             not null,
+   è´¦æˆ·å·                  INTEGER              not null,
+   æœ€è¿‘è®¿é—®æ—¥æœŸ_è´·æ¬¾            DATE,
+   constraint PK_è´·æ¬¾å¼€æˆ· primary key (èº«ä»½è¯å·, åå­—, è´¦æˆ·å·)
 );
 
-/*==============================================================*/
-/* Index: Áìµ¼_FK                                                 */
-/*==============================================================*/
-create index Áìµ¼_FK on Ô±¹¤ (
-   Ô±¹¤_Éí·İÖ¤ºÅY ASC
-);
 
 /*==============================================================*/
-/* Table: ¿Í»§                                                    */
+/* Table: è´·æ¬¾è´¦æˆ·                                                  */
 /*==============================================================*/
-create table ¿Í»§ 
+create table è´·æ¬¾è´¦æˆ· 
 (
-   Éí·İÖ¤ºÅ                 nvarchar2(20)             not null,
-   Éí·İÖ¤ºÅY                nvarchar2(20),
-   ĞÕÃû                   nvarchar2(50),
-   ÁªÏµµç»°                 nvarchar2(50),
-   ¼ÒÍ¥×¡Ö·                 nvarchar2(50),
-   ÁªÏµÈËĞÕÃû                nvarchar2(50)                 not null,
-   ÁªÏµÈËÊÖ»úºÅ               nvarchar2(50),
-   ÁªÏµÈËEmail           nvarchar2(50),
-   ÁªÏµÈËÓë¿Í»§¹ØÏµ             nvarchar2(50),
-   ¸ºÔğÈËÀàĞÍ                nvarchar2(50),
-   constraint PK_¿Í»§ primary key (Éí·İÖ¤ºÅ)
+   è´¦æˆ·å·                  INTEGER              not null,
+   å¼€æˆ·æ—¥æœŸ                 DATE,
+   ä½™é¢                   DECIMAL(8,2),
+   é€æ”¯é¢                  DECIMAL(8,2),
+   constraint PK_è´·æ¬¾è´¦æˆ· primary key (è´¦æˆ·å·)
 );
 
-/*==============================================================*/
-/* Index: ¸ºÔğ_FK                                                 */
-/*==============================================================*/
-create index ¸ºÔğ_FK on ¿Í»§ (
-   Éí·İÖ¤ºÅY ASC
-);
 
 /*==============================================================*/
-/* Table: ÓµÓĞ5                                                   */
+/* Table: å‘˜å·¥                                                    */
 /*==============================================================*/
-create table ÓµÓĞ5 
+create table å‘˜å·¥ 
 (
-   ´û¿îºÅ                  INTEGER              not null,
-   Éí·İÖ¤ºÅ                 nvarchar2(20)             not null,
-   constraint PK_ÓµÓĞ5 primary key (´û¿îºÅ, Éí·İÖ¤ºÅ)
+   èº«ä»½è¯å·Y               varchar(20)             not null,
+   å‘˜å·¥_èº«ä»½è¯å·Y            varchar(20),
+   å§“åY                  varchar(50),
+   ç”µè¯å·ç Y                varchar(50),
+   å®¶åº­ä½å€Y                varchar(50),
+   å¼€å§‹å·¥ä½œæ—¥æœŸ              DATE,
+   constraint PK_å‘˜å·¥ primary key (èº«ä»½è¯å·Y)
 );
 
-/*==============================================================*/
-/* Index: ÓµÓĞ5_FK                                                */
-/*==============================================================*/
-create index ÓµÓĞ5_FK on ÓµÓĞ5 (
-   ´û¿îºÅ ASC
-);
 
 /*==============================================================*/
-/* Index: ÓµÓĞ6_FK                                                */
+/* Table: å®¢æˆ·                                                    */
 /*==============================================================*/
-create index ÓµÓĞ6_FK on ÓµÓĞ5 (
-   Éí·İÖ¤ºÅ ASC
-);
-
-/*==============================================================*/
-/* Table: Ö§¸¶Çé¿ö                                                  */
-/*==============================================================*/
-create table Ö§¸¶Çé¿ö 
+create table å®¢æˆ· 
 (
-   ´û¿îºÅ                  INTEGER              not null,
-   Éí·İÖ¤ºÅ                 nvarchar2(20)             not null,
-   ½ğ¶î1                  NUMBER(8,2),
-   ÈÕÆÚ¸¶¿î                 DATE,
-   constraint PK_Ö§¸¶Çé¿ö primary key (´û¿îºÅ, Éí·İÖ¤ºÅ)
+   èº«ä»½è¯å·                 varchar(20)             not null,
+   èº«ä»½è¯å·Y                varchar(20),
+   å§“å                   varchar(50),
+   è”ç³»ç”µè¯                 varchar(50),
+   å®¶åº­ä½å€                 varchar(50),
+   è”ç³»äººå§“å                varchar(50)                 not null,
+   è”ç³»äººæ‰‹æœºå·               varchar(50),
+   è”ç³»äººEmail           varchar(50),
+   è”ç³»äººä¸å®¢æˆ·å…³ç³»             varchar(50),
+   è´Ÿè´£äººç±»å‹                varchar(50),
+   constraint PK_å®¢æˆ· primary key (èº«ä»½è¯å·)
 );
 
-/*==============================================================*/
-/* Index: Ö§¸¶Çé¿ö_FK                                               */
-/*==============================================================*/
-create index Ö§¸¶Çé¿ö_FK on Ö§¸¶Çé¿ö (
-   ´û¿îºÅ ASC
-);
 
 /*==============================================================*/
-/* Index: Ö§¸¶Çé¿ö2_FK                                              */
+/* Table: æ‹¥æœ‰5                                                   */
 /*==============================================================*/
-create index Ö§¸¶Çé¿ö2_FK on Ö§¸¶Çé¿ö (
-   Éí·İÖ¤ºÅ ASC
-);
-
-/*==============================================================*/
-/* Table: Ö§ĞĞ                                                    */
-/*==============================================================*/
-create table Ö§ĞĞ 
+create table æ‹¥æœ‰5 
 (
-   ³ÇÊĞ                   nvarchar2(20)             not null,
-   Ãû×Ö                   nvarchar2(20)             not null,
-   ×Ê²ú                   NUMBER(8,2)          not null,
-   constraint PK_Ö§ĞĞ primary key (Ãû×Ö)
+   è´·æ¬¾å·                  INTEGER              not null,
+   èº«ä»½è¯å·                 varchar(20)             not null,
+   constraint PK_æ‹¥æœ‰5 primary key (è´·æ¬¾å·, èº«ä»½è¯å·)
 );
 
+
 /*==============================================================*/
-/* Table: ÕË»§                                                    */
+/* Table: æ”¯ä»˜æƒ…å†µ                                                  */
 /*==============================================================*/
-create table ÕË»§ 
+create table æ”¯ä»˜æƒ…å†µ 
 (
-   ÕË»§ºÅ                  INTEGER              not null,
-   ¿ª»§ÈÕÆÚ                 DATE,
-   Óà¶î                   NUMBER(8,2),
-   constraint PK_ÕË»§ primary key (ÕË»§ºÅ)
+   è´·æ¬¾å·                  INTEGER              not null,
+   èº«ä»½è¯å·                 varchar(20)             not null,
+   é‡‘é¢1                  DECIMAL(8,2),
+   æ—¥æœŸä»˜æ¬¾                 DATE,
+   constraint PK_æ”¯ä»˜æƒ…å†µ primary key (è´·æ¬¾å·, èº«ä»½è¯å·)
 );
 
+
 /*==============================================================*/
-/* Table: ´û¿î                                                    */
+/* Table: æ”¯è¡Œ                                                    */
 /*==============================================================*/
-create table ´û¿î 
+create table æ”¯è¡Œ 
 (
-   ½ğ¶î1                  NUMBER(8,2),
-   ´û¿îºÅ                  INTEGER              not null,
-   Ãû×Ö                   nvarchar2(20),
-   constraint PK_´û¿î primary key (´û¿îºÅ)
+   åŸå¸‚                   varchar(20)             not null,
+   åå­—                   varchar(20)             not null,
+   èµ„äº§                   DECIMAL(8,2)          not null,
+   constraint PK_æ”¯è¡Œ primary key (åå­—)
 );
 
 /*==============================================================*/
-/* Index: ÓµÓĞ´û¿î_FK                                               */
+/* Table: è´¦æˆ·                                                    */
 /*==============================================================*/
-create index ÓµÓĞ´û¿î_FK on ´û¿î (
-   Ãû×Ö ASC
-);
-
-/*==============================================================*/
-/* Table: ´û¿î¿ª»§                                                  */
-/*==============================================================*/
-create table ´û¿î¿ª»§ 
+create table è´¦æˆ· 
 (
-   Éí·İÖ¤ºÅ                 nvarchar2(20)             not null,
-   Ãû×Ö                   nvarchar2(20)             not null,
-   ÕË»§ºÅ                  INTEGER              not null,
-   ×î½ü·ÃÎÊÈÕÆÚ_´û¿î            DATE,
-   constraint PK_´û¿î¿ª»§ primary key (Éí·İÖ¤ºÅ, Ãû×Ö, ÕË»§ºÅ)
+   è´¦æˆ·å·                  INTEGER              not null,
+   å¼€æˆ·æ—¥æœŸ                 DATE,
+   ä½™é¢                   DECIMAL(8,2),
+   constraint PK_è´¦æˆ· primary key (è´¦æˆ·å·)
 );
 
 /*==============================================================*/
-/* Index: ´û¿î¿ª»§_FK                                               */
+/* Table: è´·æ¬¾                                                    */
 /*==============================================================*/
-create index ´û¿î¿ª»§_FK on ´û¿î¿ª»§ (
-   Éí·İÖ¤ºÅ ASC
-);
-
-/*==============================================================*/
-/* Index: ´û¿î¿ª»§2_FK                                              */
-/*==============================================================*/
-create index ´û¿î¿ª»§2_FK on ´û¿î¿ª»§ (
-   Ãû×Ö ASC
-);
-
-/*==============================================================*/
-/* Index: ´û¿î¿ª»§3_FK                                              */
-/*==============================================================*/
-create index ´û¿î¿ª»§3_FK on ´û¿î¿ª»§ (
-   ÕË»§ºÅ ASC
-);
-
-/*==============================================================*/
-/* Table: ´û¿îÕË»§                                                  */
-/*==============================================================*/
-create table ´û¿îÕË»§ 
+create table è´·æ¬¾ 
 (
-   ÕË»§ºÅ                  INTEGER              not null,
-   ¿ª»§ÈÕÆÚ                 DATE,
-   Óà¶î                   NUMBER(8,2),
-   Í¸Ö§¶î                  NUMBER(8,2),
-   constraint PK_´û¿îÕË»§ primary key (ÕË»§ºÅ)
+   é‡‘é¢1                  DECIMAL(8,2),
+   è´·æ¬¾å·                  INTEGER              not null,
+   åå­—                   varchar(20),
+   constraint PK_è´·æ¬¾ primary key (è´·æ¬¾å·)
 );
 
-alter table ´¢Ğî¿ª»§
-   add constraint FK_´¢Ğî¿ª»§_´¢Ğî¿ª»§_¿Í»§ foreign key (Éí·İÖ¤ºÅ)
-      references ¿Í»§ (Éí·İÖ¤ºÅ);
 
-alter table ´¢Ğî¿ª»§
-   add constraint FK_´¢Ğî¿ª»§_´¢Ğî¿ª»§2_Ö§ĞĞ foreign key (Ãû×Ö)
-      references Ö§ĞĞ (Ãû×Ö);
+alter table å‚¨è“„å¼€æˆ·
+   add constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·_å®¢æˆ· foreign key (èº«ä»½è¯å·)
+      references å®¢æˆ· (èº«ä»½è¯å·);
 
-alter table ´¢Ğî¿ª»§
-   add constraint FK_´¢Ğî¿ª»§_´¢Ğî¿ª»§3_´¢ĞîÕË»§ foreign key (ÕË»§ºÅ)
-      references ´¢ĞîÕË»§ (ÕË»§ºÅ);
+alter table å‚¨è“„å¼€æˆ·
+   add constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·2_æ”¯è¡Œ foreign key (åå­—)
+      references æ”¯è¡Œ (åå­—);
 
-alter table ´¢ĞîÕË»§
-   add constraint FK_´¢ĞîÕË»§_INHERITAN_ÕË»§ foreign key (ÕË»§ºÅ)
-      references ÕË»§ (ÕË»§ºÅ);
+alter table å‚¨è“„å¼€æˆ·
+   add constraint FK_å‚¨è“„å¼€æˆ·_å‚¨è“„å¼€æˆ·3_å‚¨è“„è´¦æˆ· foreign key (è´¦æˆ·å·)
+      references å‚¨è“„è´¦æˆ· (è´¦æˆ·å·);
 
-alter table Ô±¹¤
-   add constraint FK_Ô±¹¤_Áìµ¼_Ô±¹¤ foreign key (Ô±¹¤_Éí·İÖ¤ºÅY)
-      references Ô±¹¤ (Éí·İÖ¤ºÅY);
+alter table å‚¨è“„è´¦æˆ·
+   add constraint FK_å‚¨è“„è´¦æˆ·_INHERITAN_è´¦æˆ· foreign key (è´¦æˆ·å·)
+      references è´¦æˆ· (è´¦æˆ·å·);
 
-alter table ¿Í»§
-   add constraint FK_¿Í»§_¸ºÔğ_Ô±¹¤ foreign key (Éí·İÖ¤ºÅY)
-      references Ô±¹¤ (Éí·İÖ¤ºÅY);
+alter table å‘˜å·¥
+   add constraint FK_å‘˜å·¥_é¢†å¯¼_å‘˜å·¥ foreign key (å‘˜å·¥_èº«ä»½è¯å·Y)
+      references å‘˜å·¥ (èº«ä»½è¯å·Y);
 
-alter table ÓµÓĞ5
-   add constraint FK_ÓµÓĞ5_ÓµÓĞ5_´û¿î foreign key (´û¿îºÅ)
-      references ´û¿î (´û¿îºÅ);
+alter table å®¢æˆ·
+   add constraint FK_å®¢æˆ·_è´Ÿè´£_å‘˜å·¥ foreign key (èº«ä»½è¯å·Y)
+      references å‘˜å·¥ (èº«ä»½è¯å·Y);
 
-alter table ÓµÓĞ5
-   add constraint FK_ÓµÓĞ5_ÓµÓĞ6_¿Í»§ foreign key (Éí·İÖ¤ºÅ)
-      references ¿Í»§ (Éí·İÖ¤ºÅ);
+alter table æ‹¥æœ‰5
+   add constraint FK_æ‹¥æœ‰5_æ‹¥æœ‰5_è´·æ¬¾ foreign key (è´·æ¬¾å·)
+      references è´·æ¬¾ (è´·æ¬¾å·);
 
-alter table Ö§¸¶Çé¿ö
-   add constraint FK_Ö§¸¶Çé¿ö_Ö§¸¶Çé¿ö_´û¿î foreign key (´û¿îºÅ)
-      references ´û¿î (´û¿îºÅ);
+alter table æ‹¥æœ‰5
+   add constraint FK_æ‹¥æœ‰5_æ‹¥æœ‰6_å®¢æˆ· foreign key (èº«ä»½è¯å·)
+      references å®¢æˆ· (èº«ä»½è¯å·);
 
-alter table Ö§¸¶Çé¿ö
-   add constraint FK_Ö§¸¶Çé¿ö_Ö§¸¶Çé¿ö2_¿Í»§ foreign key (Éí·İÖ¤ºÅ)
-      references ¿Í»§ (Éí·İÖ¤ºÅ);
+alter table æ”¯ä»˜æƒ…å†µ
+   add constraint FK_æ”¯ä»˜æƒ…å†µ_æ”¯ä»˜æƒ…å†µ_è´·æ¬¾ foreign key (è´·æ¬¾å·)
+      references è´·æ¬¾ (è´·æ¬¾å·);
 
-alter table ´û¿î
-   add constraint FK_´û¿î_ÓµÓĞ´û¿î_Ö§ĞĞ foreign key (Ãû×Ö)
-      references Ö§ĞĞ (Ãû×Ö);
+alter table æ”¯ä»˜æƒ…å†µ
+   add constraint FK_æ”¯ä»˜æƒ…å†µ_æ”¯ä»˜æƒ…å†µ2_å®¢æˆ· foreign key (èº«ä»½è¯å·)
+      references å®¢æˆ· (èº«ä»½è¯å·);
 
-alter table ´û¿î¿ª»§
-   add constraint FK_´û¿î¿ª»§_´û¿î¿ª»§_¿Í»§ foreign key (Éí·İÖ¤ºÅ)
-      references ¿Í»§ (Éí·İÖ¤ºÅ);
+alter table è´·æ¬¾
+   add constraint FK_è´·æ¬¾_æ‹¥æœ‰è´·æ¬¾_æ”¯è¡Œ foreign key (åå­—)
+      references æ”¯è¡Œ (åå­—);
 
-alter table ´û¿î¿ª»§
-   add constraint FK_´û¿î¿ª»§_´û¿î¿ª»§2_Ö§ĞĞ foreign key (Ãû×Ö)
-      references Ö§ĞĞ (Ãû×Ö);
+alter table è´·æ¬¾å¼€æˆ·
+   add constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·_å®¢æˆ· foreign key (èº«ä»½è¯å·)
+      references å®¢æˆ· (èº«ä»½è¯å·);
 
-alter table ´û¿î¿ª»§
-   add constraint FK_´û¿î¿ª»§_´û¿î¿ª»§3_´û¿îÕË»§ foreign key (ÕË»§ºÅ)
-      references ´û¿îÕË»§ (ÕË»§ºÅ);
+alter table è´·æ¬¾å¼€æˆ·
+   add constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·2_æ”¯è¡Œ foreign key (åå­—)
+      references æ”¯è¡Œ (åå­—);
 
-alter table ´û¿îÕË»§
-   add constraint FK_´û¿îÕË»§_INHERITAN_ÕË»§ foreign key (ÕË»§ºÅ)
-      references ÕË»§ (ÕË»§ºÅ);
+alter table è´·æ¬¾å¼€æˆ·
+   add constraint FK_è´·æ¬¾å¼€æˆ·_è´·æ¬¾å¼€æˆ·3_è´·æ¬¾è´¦æˆ· foreign key (è´¦æˆ·å·)
+      references è´·æ¬¾è´¦æˆ· (è´¦æˆ·å·);
 
+alter table è´·æ¬¾è´¦æˆ·
+   add constraint FK_è´·æ¬¾è´¦æˆ·_INHERITAN_è´¦æˆ· foreign key (è´¦æˆ·å·)
+      references è´¦æˆ· (è´¦æˆ·å·);
